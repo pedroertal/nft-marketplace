@@ -4,7 +4,7 @@ import { registerSchema, RegisterFormValues } from '../schemas/auth.schemas';
 import { useRegister } from '../api/useRegister';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { User, Mail, Lock, Sparkles, ArrowRight, Loader2, Palette, Shield } from 'lucide-react';
+import { User, Mail, Lock, Hexagon, ArrowRight, Loader2, Palette, Shield } from 'lucide-react';
 
 interface RegisterFormProps {
   redirectTo?: string;
@@ -57,7 +57,7 @@ export function RegisterForm({ redirectTo }: RegisterFormProps) {
       <div className="text-center space-y-2">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-cyan-400 to-purple-600 p-0.5 shadow-lg shadow-cyan-500/25">
           <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-slate-950/70">
-            <Sparkles className="h-6 w-6 text-cyan-400" />
+            <Hexagon className="h-6 w-6 text-cyan-300 stroke-[2.2] fill-cyan-400/10" />
           </div>
         </div>
         <h2 className="text-2xl font-extrabold tracking-tight text-white">

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MobileNav } from './MobileNav';
 import { useAuth } from '@/app/providers/AuthProvider';
-import { Sparkles, ShoppingBag, Wallet, Compass, Search } from 'lucide-react';
+import { Hexagon, ShoppingBag, Wallet, Compass, Search } from 'lucide-react';
 
 interface NavbarProps {
   cartItemCount?: number;
@@ -20,7 +20,7 @@ export function Navbar({ cartItemCount = 0 }: NavbarProps) {
           <Link to="/" className="flex items-center gap-2.5 transition-transform hover:scale-[1.02]">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-400 p-0.5 shadow-lg shadow-purple-500/25">
               <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-slate-950/40">
-                <Sparkles className="h-4 w-4 text-white" />
+                <Hexagon className="h-4 w-4 text-cyan-300 stroke-[2.2] fill-cyan-400/10" />
               </div>
             </div>
             <div className="flex flex-col">

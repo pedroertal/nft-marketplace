@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { useSocket } from '@/app/providers/SocketProvider';
-import { Sparkles, Activity, ShieldCheck, Heart } from 'lucide-react';
+import { Hexagon, Activity, ShieldCheck, Lock, Heart } from 'lucide-react';
 
 export function Footer() {
   const { isConnected } = useSocket();
@@ -13,7 +13,7 @@ export function Footer() {
             <div className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-purple-600 to-cyan-400 p-0.5">
                 <div className="flex h-full w-full items-center justify-center rounded-[6px] bg-slate-950/40">
-                  <Sparkles className="h-4 w-4 text-white" />
+                  <Hexagon className="h-4 w-4 text-cyan-300 stroke-[2.2] fill-cyan-400/10" />
                 </div>
               </div>
               <span className="font-sans text-lg font-black tracking-wider gradient-text">
@@ -88,7 +88,7 @@ export function Footer() {
                 <span>Sync em Tempo Real</span>
               </li>
               <li className="flex items-center gap-1.5">
-                <Sparkles className="h-4 w-4 text-pink-400" />
+                <Lock className="h-4 w-4 text-pink-400" />
                 <span>Idempotência Estrita</span>
               </li>
             </ul>

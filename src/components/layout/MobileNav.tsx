@@ -10,7 +10,7 @@ import {
   DrawerClose,
 } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import { Menu, ShoppingBag, Compass, User, Wallet, Sparkles, X, LogOut } from 'lucide-react';
+import { Menu, ShoppingBag, Compass, User, Wallet, Hexagon, X, LogOut } from 'lucide-react';
 
 interface MobileNavProps {
   cartItemCount?: number;
@@ -31,7 +31,7 @@ export function MobileNav({ cartItemCount = 0 }: MobileNavProps) {
         <DrawerHeader className="flex items-center justify-between border-b border-white/10 pb-4">
           <DrawerTitle className="flex items-center gap-2 text-xl font-bold">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-purple-600 to-cyan-500 shadow-md">
-              <Sparkles className="h-4 w-4 text-white" />
+              <Hexagon className="h-4 w-4 text-cyan-300 stroke-[2.2] fill-cyan-400/10" />
             </span>
             <span className="gradient-text font-black">NFT NEXUS</span>
           </DrawerTitle>

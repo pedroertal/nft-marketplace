@@ -4,7 +4,7 @@ import { loginSchema, LoginFormValues } from '../schemas/auth.schemas';
 import { useLogin } from '../api/useLogin';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Wallet, Mail, Lock, ArrowRight, Sparkles, Loader2 } from 'lucide-react';
+import { Wallet, Mail, Lock, ArrowRight, Hexagon, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface LoginFormProps {
@@ -71,7 +71,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
       <div className="text-center space-y-2">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-purple-600 to-cyan-400 p-0.5 shadow-lg shadow-purple-500/25">
           <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-slate-950/70">
-            <Sparkles className="h-6 w-6 text-white" />
+            <Hexagon className="h-6 w-6 text-cyan-300 stroke-[2.2] fill-cyan-400/10" />
           </div>
         </div>
         <h2 className="text-2xl font-extrabold tracking-tight text-white">
