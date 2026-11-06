@@ -20,8 +20,14 @@ declare module '@tanstack/react-router' {
 }
 
 async function bootstrap() {
-  // Inicializa o MSW no browser antes de montar a árvore de componentes
-  if (import.meta.env.DEV) {
+  // Inicializa o MSW para simulação autônoma (tanto em dev quanto em produção para demonstrações como Vercel)
+  // Caso uma API real seja conectada via VITE_API_URL, o MSW é desligado automaticamente.
+  const isMockEnabled =
+    import.meta.env.DEV ||
+    import.meta.env.VITE_ENABLE_MSW === 'true' ||
+    !import.meta.env.VITE_API_URL;
+
+  if (isMockEnabled) {
     await enableMocking();
   }
 
