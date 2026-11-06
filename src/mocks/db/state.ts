@@ -25,6 +25,21 @@ class MemoryDatabase {
         if (!parsed.userNfts) {
           parsed.userNfts = { u1: ['nft-2'], u2: ['nft-1'], u3: [] };
         }
+        // Migra o avatar da criadora Ana Cyber caso ainda contenha o avatar antigo
+        const anaAvatar = 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&h=200&q=80';
+        if (parsed.users) {
+          const u2 = parsed.users.find((u) => u.id === 'u2');
+          if (u2 && u2.avatar?.includes('photo-1570295999919-56ceb5ecca61')) {
+            u2.avatar = anaAvatar;
+          }
+        }
+        if (parsed.nfts) {
+          parsed.nfts.forEach((nft) => {
+            if (nft.creator?.name === 'Ana Cyber' && nft.creator?.avatar?.includes('photo-1570295999919-56ceb5ecca61')) {
+              nft.creator.avatar = 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80';
+            }
+          });
+        }
         return parsed;
       }
     } catch (e) {

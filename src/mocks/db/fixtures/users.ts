@@ -21,7 +21,7 @@ export const initialUsers: StoredUser[] = [
     email: 'ana@nexus.io',
     passwordHash: 'password123',
     role: 'creator',
-    avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=200&h=200&q=80',
+    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&h=200&q=80',
     bio: 'Artista 3D pioneira em estética neo-Tokyo e realidade sintetizada.',
     createdAt: '2026-02-20T14:30:00Z',
   },

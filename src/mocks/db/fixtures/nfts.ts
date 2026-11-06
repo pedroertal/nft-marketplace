@@ -11,7 +11,7 @@ export const initialNfts: NFT[] = [
     creator: {
       name: 'Ana Cyber',
       address: '0x145a8F264259b92209F14a6eD14f253E5D4404C9',
-      avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=150&q=80',
+      avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80',
     },
     availableEditions: 3,
     totalEditions: 10,
@@ -237,7 +237,7 @@ export const initialNfts: NFT[] = [
     creator: {
       name: 'Ana Cyber',
       address: '0x145a8F264259b92209F14a6eD14f253E5D4404C9',
-      avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=150&q=80',
+      avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80',
     },
     availableEditions: 6,
     totalEditions: 12,
