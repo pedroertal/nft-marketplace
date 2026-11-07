@@ -3,7 +3,7 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { useOrderReceipt } from '@/features/checkout/api/useOrderReceipt';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { formatAddress, formatEth } from '@/lib/utils';
+import { formatEth } from '@/lib/utils';
 import {
   CheckCircle2,
   Copy,
@@ -45,8 +45,8 @@ function CheckoutSuccessPage() {
   if (isLoading) {
     return (
       <div className="container py-16 max-w-2xl space-y-6">
-        <Skeleton className="h-24 w-full rounded-3xl" />
-        <Skeleton className="h-64 w-full rounded-3xl" />
+        <Skeleton className="h-24 w-full rounded-3xl bg-[#241a13]" />
+        <Skeleton className="h-64 w-full rounded-3xl bg-[#241a13]" />
       </div>
     );
   }
@@ -54,12 +54,12 @@ function CheckoutSuccessPage() {
   if (isError || !order) {
     return (
       <div className="container py-16 max-w-md text-center space-y-4">
-        <h2 className="text-2xl font-bold text-white">Recibo Não Encontrado</h2>
-        <p className="text-xs text-muted-foreground">
+        <h2 className="text-2xl font-bold text-[#f6eee7]">Recibo Não Encontrado</h2>
+        <p className="text-xs text-[#a49386]">
           Não foi possível localizar o recibo do pedido especificado.
         </p>
         <Link to="/">
-          <Button size="sm" className="gap-2">
+          <Button size="sm" className="gap-2 bg-[#e07328] hover:bg-[#ea8238] text-white">
             Voltar ao Catálogo
           </Button>
         </Link>
@@ -71,19 +71,17 @@ function CheckoutSuccessPage() {
 
   return (
     <div className="container py-8 md:py-14 max-w-2xl space-y-8">
-      {/* Banner de Sucesso */}
-      <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-gradient-to-b from-emerald-950/40 via-slate-900/60 to-slate-950/80 p-8 text-center backdrop-blur-xl shadow-2xl">
-        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
-
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-xl shadow-emerald-500/20">
+      {/* Banner de Sucesso (Figma Style) */}
+      <div className="relative overflow-hidden rounded-3xl border border-[#e07328]/30 bg-[#1d1510] p-8 text-center shadow-2xl">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#e07328]/15 text-[#e07328] border border-[#e07328]/30 shadow-xl shadow-black/40">
           <CheckCircle2 className="h-9 w-9" />
         </div>
 
-        <h1 className="mt-4 text-2xl sm:text-3xl font-extrabold text-white">
+        <h1 className="mt-4 text-2xl sm:text-3xl font-black text-[#f6eee7]">
           Pedido Confirmado com Sucesso!
         </h1>
 
-        <p className="mt-1.5 text-xs text-muted-foreground max-w-md mx-auto">
+        <p className="mt-1.5 text-xs text-[#a49386] max-w-md mx-auto">
           Sua transação foi registrada na blockchain e os colecionáveis foram transferidos para a sua carteira com liquidação atômica.
         </p>
 
@@ -94,129 +92,138 @@ function CheckoutSuccessPage() {
       </div>
 
       {/* Recibo Congelado / Imutável */}
-      <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 md:p-8 backdrop-blur-xl shadow-2xl space-y-6">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+      <div className="rounded-3xl border border-[#3e2c20] bg-[#1d1510] p-6 md:p-8 shadow-2xl space-y-6">
+        <div className="flex items-center justify-between border-b border-[#36261b] pb-4">
           <div className="space-y-0.5">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[#8a796e]">
               Identificador do Pedido
             </span>
-            <p className="font-mono text-sm font-bold text-white">
-              {order.orderId}
-            </p>
+            <p className="font-mono text-sm font-bold text-[#f6eee7]">{order.orderId}</p>
           </div>
 
           <div className="text-right space-y-0.5">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
-              Data de Liquidação
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[#8a796e]">
+              Data da Liquidação
             </span>
-            <p className="text-xs text-slate-300 font-mono">
-              {new Date(order.createdAt).toLocaleString('pt-BR')}
+            <p className="text-xs text-[#a49386]">
+              {new Date(order.createdAt).toLocaleDateString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
             </p>
           </div>
         </div>
 
-        {/* Hash da Transação na Blockchain */}
-        <div className="rounded-2xl border border-purple-500/20 bg-purple-950/20 p-4 space-y-1.5">
+        {/* Hash da Transação (TxHash) */}
+        <div className="rounded-2xl border border-[#36261b] bg-[#140e0b] p-4 space-y-2">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-purple-300 font-semibold flex items-center gap-1.5">
-              <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
+            <span className="font-bold text-[#f6eee7] flex items-center gap-1.5">
+              <Sparkles className="h-4 w-4 text-[#e07328]" />
               Hash da Transação (TxHash)
             </span>
             <button
               type="button"
               onClick={handleCopyTx}
-              className="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
+              className="flex items-center gap-1 text-[11px] text-[#f5a267] hover:text-[#f6eee7]"
             >
               {copiedTx ? (
                 <>
-                  <Check className="h-3.5 w-3.5 text-emerald-400" />
+                  <Check className="h-3 w-3 text-emerald-400" />
                   <span className="text-emerald-400">Copiado</span>
                 </>
               ) : (
                 <>
-                  <Copy className="h-3.5 w-3.5" />
-                  <span>Copiar</span>
+                  <Copy className="h-3 w-3" />
+                  <span>Copiar Hash</span>
                 </>
               )}
             </button>
           </div>
-          <p className="font-mono text-xs text-white break-all">
-            {order.txHash || '0x3a4b9c1d2e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f'}
-          </p>
-          <div className="flex items-center justify-between pt-1 text-[11px] text-muted-foreground">
-            <span>Rede: <strong className="text-white">{order.network}</strong></span>
-            <span>Destino: <strong className="font-mono text-purple-200">{formatAddress(order.walletAddress, 6)}</strong></span>
+          <div className="flex items-center justify-between gap-2 font-mono text-xs text-[#a49386] bg-[#1d1510] p-2.5 rounded-xl border border-[#36261b] break-all">
+            <span>{order.txHash}</span>
           </div>
         </div>
 
-        {/* Lista de NFTs Adquiridos */}
+        {/* Lista de Itens Adquiridos */}
         <div className="space-y-3">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Colecionáveis no Recibo ({items.length})
-          </h3>
-
-          <div className="divide-y divide-white/5 rounded-2xl border border-white/5 bg-slate-950/60 p-4">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-[#a49386]">
+            Colecionáveis Transferidos
+          </h4>
+          <div className="space-y-2.5">
             {items.map((item) => (
               <div
                 key={item.nftId}
-                className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0 gap-3"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-[#36261b] bg-[#140e0b] p-3 text-xs"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="h-10 w-10 rounded-lg object-cover border border-white/10 shrink-0"
+                    className="h-12 w-12 rounded-xl object-cover border border-[#36261b] bg-[#261c15] shrink-0"
                   />
                   <div className="min-w-0">
-                    <p className="text-xs font-bold text-white truncate">
-                      {item.title}
+                    <p className="font-bold text-[#f6eee7] truncate">{item.title}</p>
+                    <p className="text-[11px] text-[#8a796e]">
+                      Qtd: {item.quantity} • Criador: {item.creatorName}
                     </p>
-                    <span className="text-[10px] text-muted-foreground">
-                      Qtd: {item.quantity} × {formatEth(item.unitPrice)} ETH
-                    </span>
                   </div>
                 </div>
-
-                <span className="font-mono text-xs font-bold text-cyan-300 shrink-0">
-                  {formatEth(item.unitPrice)} ETH
-                </span>
+                <div className="text-right font-mono shrink-0">
+                  <p className="font-bold text-[#f6eee7]">
+                    {formatEth(item.unitPrice)} ETH
+                  </p>
+                  <p className="text-[10px] text-[#8a796e]">cada</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Total Final */}
-        <div className="flex items-baseline justify-between border-t border-white/10 pt-4">
-          <span className="text-sm font-bold text-white">Total Liquidado</span>
-          <div className="flex items-baseline gap-1.5 font-mono">
-            <span className="text-2xl font-black text-cyan-300">
-              {formatEth(order.total)}
+        {/* Resumo Financeiro */}
+        <div className="border-t border-[#36261b] pt-4 space-y-2 text-xs">
+          <div className="flex items-center justify-between text-[#a49386]">
+            <span>Subtotal</span>
+            <span className="font-mono text-[#f6eee7] font-semibold">
+              {formatEth(order.snapshot?.quote?.subtotal || '0.0000')} ETH
             </span>
-            <span className="text-xs font-bold text-cyan-400">ETH</span>
+          </div>
+
+          <div className="flex items-center justify-between text-[#a49386]">
+            <span>Taxa de Rede (Gas)</span>
+            <span className="font-mono text-[#f6eee7]">
+              {formatEth(order.snapshot?.quote?.networkFee || '0.0120')} ETH
+            </span>
+          </div>
+
+          <div className="border-t border-[#36261b] pt-2 flex items-baseline justify-between">
+            <span className="font-bold text-sm text-[#f6eee7]">Total Liquidado</span>
+            <span className="font-mono text-xl font-black text-[#e07328]">
+              {formatEth(order.total || order.snapshot?.quote?.total || '0.0000')} ETH
+            </span>
           </div>
         </div>
 
-        {/* Botões de Ação */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+        {/* Ações pós-recibo */}
+        <div className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Link to="/profile">
             <Button
               size="lg"
-              variant="outline"
-              className="w-full gap-2 border-white/10 bg-slate-800/80 hover:bg-slate-700 text-xs font-semibold py-5"
+              className="w-full gap-2 font-bold py-6 text-xs sm:text-sm bg-[#e07328] hover:bg-[#ea8238] text-white shadow-xl shadow-black/40"
             >
-              <User className="h-4 w-4 text-purple-400" />
-              Ver no Meu Perfil (Meus NFTs)
+              <User className="h-4 w-4" />
+              <span>Ver no Meu Perfil (Meus NFTs)</span>
+              <ArrowRight className="h-4 w-4" />
             </Button>
           </Link>
 
           <Link to="/">
             <Button
               size="lg"
-              className="w-full gap-2 text-xs font-bold py-5 shadow-xl shadow-purple-600/25"
+              variant="outline"
+              className="w-full gap-2 py-6 text-xs sm:text-sm border-[#3e2c20] bg-[#241a13] hover:bg-[#322319] text-[#f6eee7]"
             >
-              <ShoppingBag className="h-4 w-4" />
-              Continuar Comprando
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ShoppingBag className="h-4 w-4 text-[#e07328]" />
+              <span>Voltar ao Catálogo</span>
             </Button>
           </Link>
         </div>

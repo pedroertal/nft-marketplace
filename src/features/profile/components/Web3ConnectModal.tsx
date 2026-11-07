@@ -26,7 +26,6 @@ export function Web3ConnectModal({ open, onOpenChange }: Web3ConnectModalProps) 
   const [network, setNetwork] = React.useState('Ethereum');
   const [isSimulatingMetaMask, setIsSimulatingMetaMask] = React.useState(false);
 
-  // Gera endereço hexadecimal simulado 0x...
   const generateRandomAddress = () => {
     const chars = '0123456789abcdefABCDEF';
     let rand = '0x';
@@ -69,91 +68,90 @@ export function Web3ConnectModal({ open, onOpenChange }: Web3ConnectModalProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md bg-[#1d1510] border-[#3e2c20]">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl font-bold">
-            <Wallet className="h-5 w-5 text-purple-400" />
-            Conectar Carteira Web3
+          <DialogTitle className="flex items-center gap-2 text-xl font-bold text-[#f6eee7]">
+            <Wallet className="h-5 w-5 text-[#e07328]" />
+            Conectar Nova Carteira
           </DialogTitle>
-          <DialogDescription>
-            Vincule uma carteira Ethereum, Polygon ou Arbitrum à sua conta no Nexus.
+          <DialogDescription className="text-xs text-[#a49386]">
+            Vincule uma nova chave pública Web3 à sua conta Kurio.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 pt-2">
-          {/* Botão de Auto-detecção MetaMask */}
+          {/* Ação Rápida: Simular Conexão MetaMask */}
           <Button
             type="button"
             variant="outline"
             onClick={handleSimulateMetaMask}
-            disabled={isSimulatingMetaMask || addWalletMutation.isPending}
-            className="w-full gap-3 py-5 border-purple-500/40 bg-purple-500/10 hover:bg-purple-500/20 text-purple-200"
+            disabled={isSimulatingMetaMask}
+            className="w-full gap-2 border-[#e07328]/40 bg-[#e07328]/10 hover:bg-[#e07328]/20 text-[#f5a267] text-xs font-semibold py-5 rounded-xl"
           >
             {isSimulatingMetaMask ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin text-[#e07328]" />
             ) : (
-              <Sparkles className="h-4 w-4 text-cyan-400" />
+              <Sparkles className="h-4 w-4 text-[#e07328]" />
             )}
-            Simular Conexão com MetaMask
+            Detectar Carteira MetaMask Automaticamente
           </Button>
 
-          <form onSubmit={handleSubmit} className="space-y-4 pt-2">
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-300">
-                Endereço Público (0x...)
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-[#f6eee7]">
+                Endereço Hexadecimal (0x...)
               </label>
               <Input
-                type="text"
-                placeholder="0x71C... ou gere acima"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                className="font-mono text-xs"
+                placeholder="0x71C...872"
                 required
+                className="font-mono text-xs bg-[#140e0b] border-[#36261b] text-[#f6eee7] focus:border-[#e07328]"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold uppercase tracking-wider text-slate-300">
-                  Tipo de Carteira
-                </label>
-                <select
-                  value={type}
-                  onChange={(e) => setType(e.target.value as WalletType)}
-                  className="h-10 w-full rounded-lg border border-white/10 bg-slate-900 px-3 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500/50"
-                >
-                  <option value="PRIMARY">Principal</option>
-                  <option value="SECONDARY">Secundária</option>
-                </select>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-[#f6eee7]">
                   Rede Blockchain
                 </label>
                 <select
                   value={network}
                   onChange={(e) => setNetwork(e.target.value)}
-                  className="h-10 w-full rounded-lg border border-white/10 bg-slate-900 px-3 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  className="w-full h-10 rounded-xl border border-[#36261b] bg-[#140e0b] px-3 text-xs text-[#f6eee7] focus:border-[#e07328]"
                 >
                   <option value="Ethereum">Ethereum</option>
                   <option value="Polygon">Polygon</option>
                   <option value="Arbitrum">Arbitrum</option>
                 </select>
               </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-[#f6eee7]">
+                  Tipo de Carteira
+                </label>
+                <select
+                  value={type}
+                  onChange={(e) => setType(e.target.value as WalletType)}
+                  className="w-full h-10 rounded-xl border border-[#36261b] bg-[#140e0b] px-3 text-xs text-[#f6eee7] focus:border-[#e07328]"
+                >
+                  <option value="SECONDARY">Secundária</option>
+                  <option value="PRIMARY">Principal</option>
+                </select>
+              </div>
             </div>
 
             <Button
               type="submit"
-              disabled={!address || addWalletMutation.isPending}
-              className="w-full gap-2 py-5 font-semibold mt-2"
+              disabled={addWalletMutation.isPending || !address}
+              className="w-full gap-2 py-5 font-bold mt-2 bg-[#e07328] hover:bg-[#ea8238] text-white"
             >
               {addWalletMutation.isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <CheckCircle2 className="h-4 w-4" />
               )}
-              Confirmar e Vincular Carteira
+              Confirmar Vínculo da Carteira
             </Button>
           </form>
         </div>

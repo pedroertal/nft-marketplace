@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   Dialog,
   DialogContent,
@@ -6,104 +5,68 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { Loader2, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
+import { Loader2, ShieldCheck, CheckCircle2, AlertCircle } from 'lucide-react';
 
 interface CheckoutProcessingModalProps {
   open: boolean;
+  step: 'SIGNING' | 'BROADCASTING' | 'CONFIRMING' | 'SUCCESS' | 'ERROR';
+  errorMessage?: string;
 }
 
-export function CheckoutProcessingModal({ open }: CheckoutProcessingModalProps) {
-  const [step, setStep] = React.useState(1);
-
-  React.useEffect(() => {
-    if (!open) {
-      setStep(1);
-      return;
-    }
-
-    const t1 = setTimeout(() => setStep(2), 700);
-    const t2 = setTimeout(() => setStep(3), 1500);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
-  }, [open]);
-
+export function CheckoutProcessingModal({
+  open,
+  step,
+  errorMessage,
+}: CheckoutProcessingModalProps) {
   return (
     <Dialog open={open}>
-      <DialogContent className="max-w-md text-center py-8">
-        <DialogHeader className="items-center">
-          <div className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-purple-600 to-cyan-400 p-0.5 shadow-2xl shadow-purple-500/25">
-            <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-slate-950">
-              <Sparkles className="h-8 w-8 text-cyan-300" />
-            </div>
-          </div>
-
-          <DialogTitle className="text-xl font-extrabold text-white pt-3">
-            Processando Transação Web3
+      <DialogContent className="max-w-md p-6 text-center space-y-6 sm:rounded-3xl bg-[#1d1510] border-[#3e2c20]">
+        <DialogHeader className="space-y-3">
+          <DialogTitle className="text-xl font-bold text-[#f6eee7] flex items-center justify-center gap-2">
+            <ShieldCheck className="h-6 w-6 text-[#e07328]" />
+            Processando Transação Blockchain
           </DialogTitle>
-          <DialogDescription className="text-xs">
-            Por favor, mantenha esta janela aberta enquanto liquidamos seu pedido.
+          <DialogDescription className="text-xs text-[#a49386]">
+            Garantia de idempotência ativa. Não recarregue a página enquanto o bloco é minerado.
           </DialogDescription>
         </DialogHeader>
 
-        {/* Steps */}
-        <div className="space-y-4 pt-4 text-left max-w-xs mx-auto">
-          {/* Passo 1 */}
-          <div className="flex items-center gap-3">
-            {step > 1 ? (
-              <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
-            ) : (
-              <Loader2 className="h-5 w-5 text-purple-400 animate-spin shrink-0" />
-            )}
-            <span
-              className={`text-xs font-medium ${
-                step >= 1 ? 'text-white' : 'text-muted-foreground'
-              }`}
-            >
-              Assinando transação com a carteira
-            </span>
-          </div>
+        {/* Step Indicator */}
+        <div className="py-4 space-y-5">
+          {step !== 'ERROR' && step !== 'SUCCESS' && (
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#e07328]/15 border border-[#e07328]/30">
+              <Loader2 className="h-8 w-8 text-[#e07328] animate-spin" />
+            </div>
+          )}
 
-          {/* Passo 2 */}
-          <div className="flex items-center gap-3">
-            {step > 2 ? (
-              <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
-            ) : step === 2 ? (
-              <Loader2 className="h-5 w-5 text-cyan-400 animate-spin shrink-0" />
-            ) : (
-              <div className="h-5 w-5 rounded-full border border-white/20 shrink-0" />
-            )}
-            <span
-              className={`text-xs font-medium ${
-                step >= 2 ? 'text-white' : 'text-muted-foreground'
-              }`}
-            >
-              Validando chave de idempotência e cotação
-            </span>
-          </div>
+          {step === 'SUCCESS' && (
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+              <CheckCircle2 className="h-8 w-8" />
+            </div>
+          )}
 
-          {/* Passo 3 */}
-          <div className="flex items-center gap-3">
-            {step === 3 ? (
-              <Loader2 className="h-5 w-5 text-emerald-400 animate-spin shrink-0" />
-            ) : (
-              <div className="h-5 w-5 rounded-full border border-white/20 shrink-0" />
-            )}
-            <span
-              className={`text-xs font-medium ${
-                step === 3 ? 'text-white' : 'text-muted-foreground'
-              }`}
-            >
-              Registrando contrato e gerando recibo
-            </span>
-          </div>
-        </div>
+          {step === 'ERROR' && (
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10 border border-red-500/30 text-red-400">
+              <AlertCircle className="h-8 w-8" />
+            </div>
+          )}
 
-        <div className="flex items-center justify-center gap-1.5 pt-4 text-[11px] text-muted-foreground">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-          <span>Garantia de liquidação atômica e proteção contra front-running</span>
+          <div className="space-y-1">
+            <h4 className="font-bold text-sm text-[#f6eee7]">
+              {step === 'SIGNING' && 'Assinando Requisição Criptográfica...'}
+              {step === 'BROADCASTING' && 'Propagando Transação para o Mempool...'}
+              {step === 'CONFIRMING' && 'Aguardando Confirmações de Bloco...'}
+              {step === 'SUCCESS' && 'Liquidação Concluída com Sucesso!'}
+              {step === 'ERROR' && 'Falha na Transação'}
+            </h4>
+            <p className="text-xs text-[#a49386]">
+              {step === 'SIGNING' && 'Validando chaves de segurança e chave de idempotência.'}
+              {step === 'BROADCASTING' && 'Submetendo hash para mineradores na rede Ethereum.'}
+              {step === 'CONFIRMING' && 'A transação foi incluída no bloco mais recente.'}
+              {step === 'SUCCESS' && 'Redirecionando para o recibo do seu pedido...'}
+              {step === 'ERROR' && (errorMessage || 'Ocorreu um erro ao processar a liquidação.')}
+            </p>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

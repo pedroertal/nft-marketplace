@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router';
 import { CartItem } from '@/types/entities';
 import { Button } from '@/components/ui/button';
 import { formatEth } from '@/lib/utils';
+import { Decimal } from '@/lib/decimal';
 import { useUpdateCartItem } from '../api/useUpdateCartItem';
 import { useRemoveFromCart } from '../api/useRemoveFromCart';
 import { useAcceptPriceChange } from '../api/useAcceptPriceChange';
@@ -49,8 +50,10 @@ export function CartItemRow({ item }: CartItemRowProps) {
     }
   };
 
+  const lineTotal = Decimal.mul(item.unitPrice, item.quantity);
+
   return (
-    <div className="flex flex-col rounded-2xl border border-white/10 bg-slate-900/60 p-4 backdrop-blur-xl transition-all hover:border-white/20 space-y-3">
+    <div className="flex flex-col rounded-2xl border border-[#36261b] bg-[#1d1510] p-4 transition-all hover:border-[#4d3627] space-y-3">
       {/* Aviso Concorrente de Alteração de Preço em Tempo Real */}
       {item.hasPriceChanged && item.newPrice && (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-200">
@@ -82,69 +85,84 @@ export function CartItemRow({ item }: CartItemRowProps) {
             <img
               src={item.image}
               alt={item.title}
-              className="h-16 w-16 rounded-xl object-cover border border-white/10 shrink-0 hover:scale-105 transition-transform"
+              className="h-16 w-16 rounded-xl object-cover border border-[#36261b] shrink-0 hover:scale-105 transition-transform bg-[#261c15]"
             />
           </Link>
           <div className="min-w-0">
             <Link
               to="/nfts/$nftId"
               params={{ nftId: item.nftId }}
-              className="font-bold text-sm sm:text-base text-white hover:text-purple-300 truncate block"
+              className="font-bold text-sm sm:text-base text-[#f6eee7] hover:text-[#e07328] truncate block transition-colors"
             >
               {item.title}
             </Link>
-            <p className="text-xs text-muted-foreground truncate">
-              Criador: <span className="text-purple-300">{item.creatorName}</span>
+            <p className="text-xs text-[#a49386] truncate">
+              Criador: <span className="text-[#f6eee7]">{item.creatorName}</span>
             </p>
             <div className="mt-1 flex items-baseline gap-1 font-mono">
-              <span className="text-sm font-black text-cyan-300">
+              <span className="text-sm font-black text-[#f6eee7]">
                 {formatEth(item.unitPrice)}
               </span>
-              <span className="text-[10px] text-muted-foreground font-semibold">ETH cada</span>
+              <span className="text-[10px] font-semibold text-[#e07328]">
+                ETH cada
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Controles de Quantidade e Preço Total */}
+        {/* Quantidade e Subtotal */}
         <div className="flex items-center gap-4 sm:gap-6 shrink-0">
-          {/* Contador de Quantidade */}
-          <div className="flex items-center rounded-xl border border-white/10 bg-slate-950/70 p-1">
-            <button
-              type="button"
+          {/* Seletor de Quantidade (+/-) */}
+          <div className="flex items-center rounded-xl border border-[#36261b] bg-[#140e0b] p-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 text-[#a49386] hover:text-[#f6eee7] hover:bg-[#281d16]"
               onClick={handleDecrement}
-              disabled={updateQuantityMutation.isPending || removeItemMutation.isPending}
-              className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-white/10 hover:text-white disabled:opacity-50"
+              disabled={updateQuantityMutation.isPending}
               aria-label="Diminuir quantidade"
             >
               <Minus className="h-3.5 w-3.5" />
-            </button>
-            <span className="w-8 text-center text-xs font-mono font-bold text-white">
+            </Button>
+            <span className="w-8 text-center font-mono text-xs font-bold text-[#f6eee7]">
               {item.quantity}
             </span>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 text-[#a49386] hover:text-[#f6eee7] hover:bg-[#281d16]"
               onClick={handleIncrement}
               disabled={
                 item.quantity >= item.availableEditions ||
                 updateQuantityMutation.isPending
               }
-              className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-white/10 hover:text-white disabled:opacity-50"
               aria-label="Aumentar quantidade"
             >
               <Plus className="h-3.5 w-3.5" />
-            </button>
+            </Button>
           </div>
 
-          {/* Remover Item */}
-          <button
-            type="button"
+          {/* Subtotal da Linha */}
+          <div className="hidden sm:flex flex-col text-right font-mono min-w-[70px]">
+            <span className="text-[10px] uppercase font-semibold text-[#8a796e]">
+              Subtotal
+            </span>
+            <span className="text-sm font-black text-[#f6eee7]">
+              {formatEth(lineTotal)} ETH
+            </span>
+          </div>
+
+          {/* Botão de Remover */}
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={handleRemove}
             disabled={removeItemMutation.isPending}
-            className="text-muted-foreground hover:text-destructive p-2 transition-colors"
-            aria-label="Remover item do carrinho"
+            className="h-8 w-8 text-[#8a796e] hover:text-red-400 hover:bg-red-500/10"
+            aria-label={`Remover ${item.title} do carrinho`}
           >
             <Trash2 className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

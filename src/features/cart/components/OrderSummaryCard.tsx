@@ -65,9 +65,9 @@ export function OrderSummaryCard({
   };
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 backdrop-blur-xl shadow-2xl space-y-6">
-      <h3 className="text-lg font-bold text-white flex items-center gap-2 border-b border-white/10 pb-4">
-        <Sparkles className="h-5 w-5 text-purple-400" />
+    <div className="rounded-3xl border border-[#3e2c20] bg-[#1d1510] p-6 shadow-2xl space-y-6">
+      <h3 className="text-lg font-bold text-[#f6eee7] flex items-center gap-2 border-b border-[#36261b] pb-4">
+        <Sparkles className="h-5 w-5 text-[#e07328]" />
         Resumo do Pedido
       </h3>
 
@@ -83,9 +83,9 @@ export function OrderSummaryCard({
 
       {/* Linhas Financeiras com Precisão Decimal */}
       <div className="space-y-3 text-sm">
-        <div className="flex items-center justify-between text-muted-foreground">
+        <div className="flex items-center justify-between text-[#a49386]">
           <span>Subtotal dos Itens</span>
-          <span className="font-mono text-white font-semibold">
+          <span className="font-mono text-[#f6eee7] font-semibold">
             {formatEth(quote?.subtotal || calculatedSubtotal)} ETH
           </span>
         </div>
@@ -99,30 +99,30 @@ export function OrderSummaryCard({
           </div>
         )}
 
-        <div className="flex items-center justify-between text-muted-foreground">
-          <span>Estimativa de Gas (Rede)</span>
-          <span className="font-mono text-white font-semibold">
-            {formatEth(networkFee)} ETH
-          </span>
+        <div className="flex items-center justify-between text-[#a49386]">
+          <div className="flex items-center gap-1.5">
+            <span>Taxa de Rede (Gas)</span>
+          </div>
+          <span className="font-mono text-[#f6eee7]">{formatEth(networkFee)} ETH</span>
         </div>
 
-        <div className="flex items-baseline justify-between border-t border-white/10 pt-4">
-          <span className="text-base font-bold text-white">Total a Pagar</span>
-          <div className="flex items-baseline gap-1.5 font-mono">
-            <span className="text-2xl font-black text-cyan-300">
+        <div className="border-t border-[#36261b] pt-3 flex items-baseline justify-between">
+          <span className="font-bold text-[#f6eee7]">Total Estimado</span>
+          <div className="flex items-baseline gap-1 text-right">
+            <span className="text-2xl font-black text-[#f6eee7] font-mono">
               {formatEth(finalTotal)}
             </span>
-            <span className="text-xs font-bold text-cyan-400">ETH</span>
+            <span className="text-xs font-bold text-[#e07328] font-mono">ETH</span>
           </div>
         </div>
       </div>
 
-      {/* Botão de Checkout */}
+      {/* Botão de Avançar */}
       <Button
         size="lg"
         disabled={items.length === 0 || hasPriceConflict}
         onClick={handleProceedToCheckout}
-        className="w-full gap-2 py-6 font-bold text-sm shadow-xl shadow-purple-600/25 rounded-xl"
+        className="w-full gap-2 py-6 text-sm font-bold bg-[#e07328] hover:bg-[#ea8238] text-white shadow-xl shadow-black/40"
       >
         <span>
           {!isAuthenticated
@@ -132,10 +132,10 @@ export function OrderSummaryCard({
         <ArrowRight className="h-4 w-4" />
       </Button>
 
-      {/* Selos de Garantia */}
-      <div className="flex items-center justify-center gap-2 text-[11px] text-muted-foreground pt-1">
-        <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-        <span>Garantia de Idempotência e Zero Slippage</span>
+      {/* Trust pill */}
+      <div className="flex items-center justify-center gap-2 text-[11px] text-[#8a796e] border-t border-[#36261b] pt-4">
+        <ShieldCheck className="h-4 w-4 text-[#e07328]" />
+        <span>Garantia de idempotência & custódia soberana</span>
       </div>
     </div>
   );

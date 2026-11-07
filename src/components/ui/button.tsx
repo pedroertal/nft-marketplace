@@ -9,19 +9,19 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-600/25 hover:from-purple-500 hover:to-indigo-500 hover:shadow-purple-600/35 border border-purple-500/30',
+          'bg-primary hover:bg-[#ea8238] text-white shadow-md shadow-black/40 border border-[#e07328]/30 font-semibold',
         destructive:
           'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm',
         outline:
-          'border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 hover:border-purple-500/40 text-foreground backdrop-blur-sm',
+          'border border-[#38261b] bg-[#1a130f]/80 hover:bg-[#281d16] hover:border-[#e07328]/40 text-foreground backdrop-blur-sm',
         secondary:
-          'bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-white/5',
+          'bg-[#281d16] text-[#f6eee7] hover:bg-[#35251c] border border-[#3e2c20]',
         ghost:
-          'hover:bg-white/5 hover:text-accent text-muted-foreground',
+          'hover:bg-[#281d16]/70 hover:text-foreground text-muted-foreground',
         link:
-          'text-purple-400 underline-offset-4 hover:underline hover:text-purple-300',
+          'text-[#e07328] underline-offset-4 hover:underline hover:text-[#ea8238]',
         neon:
-          'bg-cyan-500 text-slate-950 font-semibold shadow-lg shadow-cyan-500/25 hover:bg-cyan-400 hover:shadow-cyan-500/40',
+          'bg-[#e07328] text-white font-semibold shadow-md shadow-orange-950/40 hover:bg-[#ea8238]',
       },
       size: {
         default: 'h-10 px-4 py-2',

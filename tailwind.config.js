@@ -45,13 +45,20 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        // Web3 / NFT Specific accents
-        cyber: {
-          neon: '#00F0FF',
-          purple: '#8B5CF6',
-          pink: '#EC4899',
-          amber: '#F59E0B',
-          emerald: '#10B981',
+        // Kurio Warm Palette Accents
+        kurio: {
+          bg: '#120d0a',
+          surface: '#1c140f',
+          surfaceLight: '#261b14',
+          border: '#36261b',
+          borderLight: '#4a3526',
+          orange: '#e07328',
+          orangeHover: '#ea8238',
+          amber: '#f59e0b',
+          cream: '#f5ede6',
+          sand: '#ebdcca',
+          sandDark: '#d9c7b4',
+          textMuted: '#a49386',
         },
       },
       borderRadius: {

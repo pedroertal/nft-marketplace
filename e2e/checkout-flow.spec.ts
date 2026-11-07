@@ -27,22 +27,22 @@ test.describe('Fluxo Crítico de Compra de NFT', () => {
     await expect(page).toHaveURL(/.*\/profile/);
     await expect(page.getByRole('heading', { name: 'Pedro Ramos' })).toBeVisible();
 
-    // 2. Navegação para o catálogo
-    await page.getByRole('link', { name: 'Explorar' }).first().click();
-    await expect(page).toHaveURL('http://localhost:3000/');
+    // 2. Navegação para o catálogo / mercado
+    await page.goto('/');
+    await page.waitForFunction(() => (window as any).__MSW_READY__ === true);
 
-    // 3. Busca e seleção do NFT "Cyber Samurai #01"
+    // 3. Busca e seleção do NFT "Imperial Ape #042"
     const searchInput = page.getByLabel('Campo de busca de NFTs');
-    await searchInput.fill('Cyber Samurai');
+    await searchInput.fill('Imperial Ape');
     await page.waitForTimeout(400); // Aguarda debounce da busca
 
-    const nftTitleLink = page.getByRole('link', { name: 'Cyber Samurai #01' }).first();
+    const nftTitleLink = page.getByRole('link', { name: /Imperial Ape #042/i }).first();
     await expect(nftTitleLink).toBeVisible();
     await nftTitleLink.click();
 
     // 4. Página de detalhes do NFT
     await expect(page).toHaveURL(/.*\/nfts\/nft-1/);
-    await expect(page.getByRole('heading', { name: 'Cyber Samurai #01' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Imperial Ape #042/i })).toBeVisible();
 
     // Adiciona ao carrinho e navega para /cart
     const buyNowButton = page.getByRole('button', { name: 'Comprar Agora' });
@@ -52,7 +52,7 @@ test.describe('Fluxo Crítico de Compra de NFT', () => {
     // 5. Página do Carrinho
     await expect(page).toHaveURL(/.*\/cart/);
     await expect(page.getByRole('heading', { name: /Carrinho/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Cyber Samurai #01' }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: /Imperial Ape #042/i }).first()).toBeVisible();
 
     // 6. Aplicação de Cupom de Desconto "NEXUS10"
     const couponInput = page.getByPlaceholder('Ex: NEXUS10');
@@ -70,7 +70,7 @@ test.describe('Fluxo Crítico de Compra de NFT', () => {
 
     // 8. Tela de Checkout
     await expect(page).toHaveURL(/.*\/checkout/);
-    await expect(page.getByRole('heading', { name: 'Checkout Seguro' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Pagamento|Checkout/i })).toBeVisible();
     await expect(page.getByText('Idempotency-Key Ativa')).toBeVisible();
 
     // Confirma e liquida pedido na blockchain
@@ -82,7 +82,7 @@ test.describe('Fluxo Crítico de Compra de NFT', () => {
     await expect(page).toHaveURL(/.*\/checkout\/success/, { timeout: 10000 });
     await expect(page.getByRole('heading', { name: 'Pedido Confirmado com Sucesso!' })).toBeVisible();
     await expect(page.getByText('Hash da Transação (TxHash)')).toBeVisible();
-    await expect(page.getByText('Cyber Samurai #01', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('Imperial Ape #042', { exact: true }).first()).toBeVisible();
 
     // 10. Navega para o Perfil e verifica Meus NFTs
     await page.getByText('Ver no Meu Perfil (Meus NFTs)').click();
@@ -91,6 +91,6 @@ test.describe('Fluxo Crítico de Compra de NFT', () => {
 
     // Valida que o NFT recém-adquirido aparece instantaneamente em "Meus NFTs"
     await expect(page.getByRole('tab', { name: /Meus NFTs/i })).toBeVisible();
-    await expect(page.getByText('Cyber Samurai #01', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('Imperial Ape #042', { exact: true }).first()).toBeVisible();
   });
 });

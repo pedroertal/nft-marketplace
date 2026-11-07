@@ -1,4 +1,5 @@
-import { Globe, Zap } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Layers } from 'lucide-react';
 
 interface NetworkSelectProps {
   selectedNetwork: string;
@@ -6,9 +7,9 @@ interface NetworkSelectProps {
 }
 
 const NETWORKS = [
-  { id: 'Ethereum', name: 'Ethereum (Sepolia)', speed: '~12 seg', icon: '⟠' },
-  { id: 'Polygon', name: 'Polygon (Amoy)', speed: '~2 seg', icon: '🟣' },
-  { id: 'Arbitrum', name: 'Arbitrum One', speed: '~1 seg', icon: '🔵' },
+  { name: 'Ethereum', symbol: 'ETH', fee: '~0.012 ETH', badge: 'Recomendada' },
+  { name: 'Polygon', symbol: 'MATIC', fee: '~0.001 ETH', badge: 'Econômica' },
+  { name: 'Arbitrum', symbol: 'ARB', fee: '~0.003 ETH', badge: 'L2 Rápida' },
 ];
 
 export function NetworkSelect({
@@ -17,39 +18,40 @@ export function NetworkSelect({
 }: NetworkSelectProps) {
   return (
     <div className="space-y-3">
-      <label className="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-        <Globe className="h-4 w-4 text-cyan-400" />
-        Rede de Liquidação
+      <label className="text-xs font-semibold uppercase tracking-wider text-[#a49386] flex items-center gap-1.5">
+        <Layers className="h-4 w-4 text-[#e07328]" />
+        Rede Blockchain para Liquidação
       </label>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
         {NETWORKS.map((net) => {
-          const isSelected = selectedNetwork === net.id;
+          const isSelected = selectedNetwork === net.name;
+
           return (
             <div
-              key={net.id}
-              onClick={() => onSelectNetwork(net.id)}
+              key={net.name}
+              onClick={() => onSelectNetwork(net.name)}
               className={`flex flex-col justify-between rounded-2xl border p-3.5 cursor-pointer transition-all ${
                 isSelected
-                  ? 'border-cyan-400 bg-cyan-950/30 shadow-md shadow-cyan-400/10'
-                  : 'border-white/10 bg-slate-900/60 hover:bg-slate-800/60'
+                  ? 'border-[#e07328] bg-[#e07328]/10 shadow-sm shadow-black/40'
+                  : 'border-[#36261b] bg-[#1d1510] hover:bg-[#261c15]'
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-base">{net.icon}</span>
-                <span
-                  className={`flex h-2 w-2 rounded-full ${
-                    isSelected ? 'bg-cyan-400' : 'bg-slate-700'
-                  }`}
-                />
+                <span className="font-bold text-xs text-[#f6eee7]">{net.name}</span>
+                {isSelected && (
+                  <span className="h-2 w-2 rounded-full bg-[#e07328]" />
+                )}
               </div>
 
-              <div className="mt-2">
-                <p className="text-xs font-bold text-white">{net.name}</p>
-                <div className="flex items-center gap-1 text-[10px] text-muted-foreground mt-0.5">
-                  <Zap className="h-3 w-3 text-amber-400" />
-                  <span>{net.speed}</span>
-                </div>
+              <div className="mt-2 flex items-center justify-between text-[11px]">
+                <span className="text-[#8a796e] font-mono">{net.fee}</span>
+                <Badge
+                  variant="outline"
+                  className="text-[9px] py-0 h-4 border-[#3d2c20] text-[#a49386]"
+                >
+                  {net.badge}
+                </Badge>
               </div>
             </div>
           );

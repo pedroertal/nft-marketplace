@@ -17,10 +17,10 @@ export function Pagination({
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 pt-6">
-      <p className="text-xs text-muted-foreground">
-        Página <span className="font-semibold text-white">{currentPage}</span> de{' '}
-        <span className="font-semibold text-white">{totalPages}</span>
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[#36261b] pt-6">
+      <p className="text-xs text-[#a49386]">
+        Página <span className="font-semibold text-[#f6eee7]">{currentPage}</span> de{' '}
+        <span className="font-semibold text-[#f6eee7]">{totalPages}</span>
       </p>
 
       <div className="flex items-center gap-1.5">
@@ -29,7 +29,7 @@ export function Pagination({
           size="sm"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage <= 1}
-          className="gap-1 border-white/10 bg-slate-900/60 text-xs"
+          className="gap-1 border-[#36261b] bg-[#1d1510] text-xs text-[#f6eee7] hover:bg-[#281d16]"
           aria-label="Página anterior"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -45,8 +45,8 @@ export function Pagination({
               onClick={() => onPageChange(p)}
               className={`h-8 w-8 p-0 text-xs font-semibold ${
                 p === currentPage
-                  ? 'bg-purple-600 text-white'
-                  : 'text-muted-foreground hover:text-white'
+                  ? 'bg-[#e07328] text-white hover:bg-[#ea8238]'
+                  : 'text-[#a49386] hover:text-[#f6eee7] hover:bg-[#281d16]'
               }`}
             >
               {p}
@@ -59,7 +59,7 @@ export function Pagination({
           size="sm"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
-          className="gap-1 border-white/10 bg-slate-900/60 text-xs"
+          className="gap-1 border-[#36261b] bg-[#1d1510] text-xs text-[#f6eee7] hover:bg-[#281d16]"
           aria-label="Próxima página"
         >
           <span>Próxima</span>

@@ -15,12 +15,9 @@ import { Decimal } from '@/lib/decimal';
 import {
   ShieldCheck,
   ArrowLeft,
-  Lock,
-  Sparkles,
   KeyRound,
-  CheckCircle2,
-  AlertTriangle,
   Loader2,
+  Lock,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -33,7 +30,7 @@ function CheckoutPage() {
   const navigate = useNavigate();
 
   const { data: cart, isLoading: cartLoading } = useCart();
-  const { data: wallets, isLoading: walletsLoading } = useWallets();
+  const { data: wallets } = useWallets();
 
   const items = cart?.items || [];
   // Mantém um snapshot estável dos itens adquiridos para evitar flicker durante a transição
@@ -43,7 +40,7 @@ function CheckoutPage() {
   }
   const displayItems = items.length > 0 ? items : itemsSnapshotRef.current;
 
-  const { data: quote, isLoading: quoteLoading } = useQuote(displayItems);
+  const { data: quote } = useQuote(displayItems);
 
   const createOrderMutation = useCreateOrder();
 
@@ -78,239 +75,247 @@ function CheckoutPage() {
     if (!cartLoading && items.length === 0 && !isSubmitting) {
       navigate({ to: '/cart' });
     }
-  }, [cartLoading, items, isSubmitting, navigate]);
+  }, [cartLoading, items.length, isSubmitting, navigate]);
 
-  const subtotal = quote?.subtotal || '0.0000';
-  const discount = quote?.discount || '0.0000';
+  const hasPriceConflict = displayItems.some((item) => item.hasPriceChanged);
+
+  // Calcula valores com segurança decimal
+  const calculatedSubtotal = React.useMemo(() => {
+    return displayItems.reduce((acc, item) => {
+      const line = Decimal.mul(item.unitPrice, item.quantity);
+      return Decimal.add(acc, line);
+    }, '0');
+  }, [displayItems]);
+
+  const discountAmount = quote?.discount || '0.0000';
   const networkFee = quote?.networkFee || '0.0120';
-  const total = quote?.total || Decimal.add(subtotal, networkFee);
+  const totalEth = quote?.total || Decimal.add(calculatedSubtotal, networkFee);
 
   const selectedWallet = wallets?.find((w) => w.address === selectedWalletAddress);
-  const hasInsufficientFunds =
-    selectedWallet?.balance && Decimal.isLessThan(selectedWallet.balance, total);
+  const isBalanceInsufficient =
+    selectedWallet?.balance && Decimal.isLessThan(selectedWallet.balance, totalEth);
 
   const handleConfirmOrder = () => {
-    // Previne cliques múltiplos concorrentes
-    if (isSubmitting) return;
-
     if (!selectedWalletAddress) {
-      toast.error('Selecione uma carteira para efetuar o pagamento.');
+      toast.error('Selecione uma carteira Web3 para continuar.');
       return;
     }
 
-    if (displayItems.some((i) => i.hasPriceChanged)) {
-      toast.error('Existem alterações de preço concorrentes no seu carrinho.');
+    if (hasPriceConflict) {
+      toast.error('Existem conflitos de preço. Reconcilie seu carrinho antes de pagar.');
+      return;
+    }
+
+    if (isBalanceInsufficient) {
+      toast.error('Saldo insuficiente na carteira selecionada.');
       return;
     }
 
     setIsProcessing(true);
 
-    // Dispara a mutação enviando o header Idempotency-Key
+    // Executa mutação idempotente enviando Idempotency-Key
     createOrderMutation.mutate(
       {
-        quoteId: quote?.quoteId || `q-${Date.now()}`,
+        quoteId: quote?.quoteId || 'quote-preview',
         walletAddress: selectedWalletAddress,
         network: selectedNetwork,
         idempotencyKey,
       },
       {
         onSuccess: (order) => {
-          setIsSuccess(true);
           setIsProcessing(false);
-          // Transição direta e fluida para o recibo, sem flicker de carrinho vazio
+          setIsSuccess(true);
+          toast.success('Pedido liquidado com sucesso na blockchain!');
           navigate({
             to: '/checkout/success',
             search: { orderId: order.orderId },
           });
         },
-        onError: () => {
+        onError: (err: any) => {
           setIsProcessing(false);
+          toast.error(
+            err?.response?.data?.message || 'Erro ao processar a liquidação do pedido.'
+          );
         },
       }
     );
   };
 
-  if (authLoading || cartLoading || walletsLoading || quoteLoading) {
+  if (authLoading || (cartLoading && items.length === 0)) {
     return (
       <div className="container py-12 max-w-5xl space-y-8">
-        <Skeleton className="h-8 w-48 rounded-lg" />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <Skeleton className="h-96 lg:col-span-2 rounded-2xl" />
-          <Skeleton className="h-96 rounded-2xl" />
+        <Skeleton className="h-8 w-64 rounded-lg bg-[#241a13]" />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-7 space-y-6">
+            <Skeleton className="h-44 w-full rounded-2xl bg-[#241a13]" />
+            <Skeleton className="h-36 w-full rounded-2xl bg-[#241a13]" />
+          </div>
+          <div className="lg:col-span-5">
+            <Skeleton className="h-80 w-full rounded-3xl bg-[#241a13]" />
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container py-8 md:py-12 max-w-5xl space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-4">
+    <div className="container py-8 md:py-12 max-w-6xl space-y-8">
+      {/* Header & Voltar */}
+      <div className="flex items-center justify-between border-b border-[#36261b] pb-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
-            <Lock className="h-7 w-7 text-purple-400" />
-            Checkout Seguro
+          <h1 className="text-3xl font-black tracking-tight text-[#f6eee7] flex items-center gap-3">
+            <Lock className="h-7 w-7 text-[#e07328]" />
+            Pagamento e Liquidação
           </h1>
-          <p className="text-xs text-muted-foreground mt-1">
-            Transação atômica idempotente com liquidação instantânea na blockchain.
+          <p className="text-xs text-[#a49386] mt-1">
+            Transação com garantia de idempotência e liquidação direta em contrato auditado.
           </p>
         </div>
 
         <Link to="/cart">
-          <Button variant="ghost" size="sm" className="gap-2 text-xs">
+          <Button variant="ghost" size="sm" className="gap-2 text-xs text-[#a49386] hover:text-[#f6eee7] hover:bg-[#281d16]">
             <ArrowLeft className="h-4 w-4" />
             Voltar ao Carrinho
           </Button>
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        {/* Coluna Esquerda: Configuração da Transação */}
-        <div className="lg:col-span-2 space-y-6">
+      {/* Main Two-Column View */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Coluna Esquerda: Carteira, Rede e Idempotência */}
+        <div className="lg:col-span-7 space-y-6">
           {/* Seletor de Carteira */}
-          <div className="rounded-3xl border border-white/10 bg-slate-900/60 p-6 backdrop-blur-xl">
+          <div className="rounded-3xl border border-[#36261b] bg-[#1d1510] p-6 shadow-xl space-y-4">
             <WalletSelector
               selectedAddress={selectedWalletAddress}
               onSelectAddress={setSelectedWalletAddress}
-              orderTotalEth={total}
+              orderTotalEth={totalEth}
             />
           </div>
 
-          {/* Seletor de Rede */}
-          <div className="rounded-3xl border border-white/10 bg-slate-900/60 p-6 backdrop-blur-xl">
+          {/* Seleção de Rede */}
+          <div className="rounded-3xl border border-[#36261b] bg-[#1d1510] p-6 shadow-xl space-y-4">
             <NetworkSelect
               selectedNetwork={selectedNetwork}
               onSelectNetwork={setSelectedNetwork}
             />
           </div>
 
-          {/* Resumo dos Itens Sendo Adquiridos */}
-          <div className="rounded-3xl border border-white/10 bg-slate-900/60 p-6 backdrop-blur-xl space-y-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300">
-              Colecionáveis Selecionados ({displayItems.length})
+          {/* Idempotency Card */}
+          <div className="rounded-2xl border border-[#36261b] bg-[#140e0b] p-4 text-xs space-y-2">
+            <div className="flex items-center justify-between text-[#8a796e]">
+              <span className="flex items-center gap-1.5 font-semibold text-[#f6eee7]">
+                <KeyRound className="h-3.5 w-3.5 text-[#e07328]" />
+                Idempotency-Key Ativa
+              </span>
+              <span className="font-mono text-[10px] text-emerald-400">Proteção contra Duplicações</span>
+            </div>
+            <p className="font-mono text-[11px] text-[#f5a267] break-all bg-[#1d1510] p-2 rounded-lg border border-[#36261b]">
+              {idempotencyKey}
+            </p>
+            <p className="text-[11px] text-[#8a796e] leading-snug">
+              Caso a conexão caia durante a assinatura, a chave impede cobranças repetidas na rede.
+            </p>
+          </div>
+        </div>
+
+        {/* Coluna Direita: Resumo do Pedido e Confirmação */}
+        <div className="lg:col-span-5 space-y-6">
+          <div className="rounded-3xl border border-[#3e2c20] bg-[#1d1510] p-6 shadow-2xl space-y-6">
+            <h3 className="text-lg font-bold text-[#f6eee7] border-b border-[#36261b] pb-4 flex items-center justify-between">
+              <span>Resumo da Compra</span>
+              <span className="text-xs font-normal text-[#a49386]">
+                {displayItems.length} {displayItems.length === 1 ? 'item' : 'itens'}
+              </span>
             </h3>
 
-            <div className="divide-y divide-white/5">
+            {/* Lista resumida de itens */}
+            <div className="space-y-3 max-h-56 overflow-y-auto pr-1">
               {displayItems.map((item) => (
                 <div
                   key={item.nftId}
-                  className="flex items-center justify-between py-3 gap-3"
+                  className="flex items-center justify-between gap-3 text-xs"
                 >
-                  <div className="flex items-center gap-3 min-w-0">
+                  <div className="flex items-center gap-2.5 min-w-0">
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="h-12 w-12 rounded-xl object-cover border border-white/10 shrink-0"
+                      className="h-10 w-10 rounded-lg object-cover border border-[#36261b] bg-[#261c15] shrink-0"
                     />
                     <div className="min-w-0">
-                      <p className="text-sm font-bold text-white truncate">
-                        {item.title}
-                      </p>
-                      <span className="text-[11px] text-muted-foreground">
+                      <p className="font-bold text-[#f6eee7] truncate">{item.title}</p>
+                      <p className="text-[11px] text-[#8a796e]">
                         Qtd: {item.quantity} × {formatEth(item.unitPrice)} ETH
-                      </span>
+                      </p>
                     </div>
                   </div>
-
-                  <span className="font-mono text-sm font-bold text-cyan-300 shrink-0">
+                  <span className="font-mono font-bold text-[#f6eee7] shrink-0">
                     {formatEth(Decimal.mul(item.unitPrice, item.quantity))} ETH
                   </span>
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-
-        {/* Coluna Direita: Resumo Financeiro e Ação de Pagamento */}
-        <div className="space-y-6">
-          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 backdrop-blur-xl shadow-2xl space-y-6">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2 border-b border-white/10 pb-4">
-              <Sparkles className="h-5 w-5 text-purple-400" />
-              Detalhes do Pagamento
-            </h3>
 
             {/* Linhas Financeiras */}
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center justify-between text-muted-foreground">
+            <div className="space-y-2.5 border-t border-[#36261b] pt-4 text-xs">
+              <div className="flex items-center justify-between text-[#a49386]">
                 <span>Subtotal</span>
-                <span className="font-mono text-white font-semibold">
-                  {formatEth(subtotal)} ETH
+                <span className="font-mono text-[#f6eee7] font-semibold">
+                  {formatEth(calculatedSubtotal)} ETH
                 </span>
               </div>
 
-              {Decimal.isGreaterThan(discount, '0') && (
+              {Decimal.isGreaterThan(discountAmount, '0') && (
                 <div className="flex items-center justify-between text-emerald-400">
-                  <span>Desconto de Cupom</span>
+                  <span>Desconto Aplicado</span>
                   <span className="font-mono font-bold">
-                    - {formatEth(discount)} ETH
+                    - {formatEth(discountAmount)} ETH
                   </span>
                 </div>
               )}
 
-              <div className="flex items-center justify-between text-muted-foreground">
-                <span>Taxa de Rede ({selectedNetwork})</span>
-                <span className="font-mono text-white font-semibold">
-                  {formatEth(networkFee)} ETH
-                </span>
+              <div className="flex items-center justify-between text-[#a49386]">
+                <span>Taxa de Rede (Gas Estimada)</span>
+                <span className="font-mono text-[#f6eee7]">{formatEth(networkFee)} ETH</span>
               </div>
 
-              <div className="flex items-baseline justify-between border-t border-white/10 pt-4">
-                <span className="text-base font-bold text-white">Total Final</span>
-                <div className="flex items-baseline gap-1.5 font-mono">
-                  <span className="text-2xl font-black text-cyan-300">
-                    {formatEth(total)}
+              <div className="border-t border-[#36261b] pt-3 flex items-baseline justify-between">
+                <span className="font-bold text-sm text-[#f6eee7]">Total a Pagar</span>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-2xl font-black text-[#f6eee7] font-mono">
+                    {formatEth(totalEth)}
                   </span>
-                  <span className="text-xs font-bold text-cyan-400">ETH</span>
+                  <span className="text-xs font-bold text-[#e07328] font-mono">
+                    ETH
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Chave de Idempotência */}
-            <div className="rounded-xl border border-white/10 bg-slate-950/70 p-3 space-y-1 text-xs">
-              <div className="flex items-center gap-1.5 text-muted-foreground font-semibold">
-                <KeyRound className="h-3.5 w-3.5 text-purple-400" />
-                <span>Idempotency-Key Ativa</span>
-              </div>
-              <p className="font-mono text-[11px] text-purple-200 truncate">
-                {idempotencyKey}
-              </p>
-            </div>
-
-            {hasInsufficientFunds && (
-              <div className="flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
-                <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0" />
-                <span>Saldo insuficiente para esta transação.</span>
-              </div>
-            )}
-
-            {/* Botão de Finalizar Pedido */}
+            {/* Botão de Confirmação e Pagamento */}
             <Button
               size="lg"
-              onClick={handleConfirmOrder}
               disabled={
                 isSubmitting ||
-                !selectedWalletAddress ||
-                Boolean(hasInsufficientFunds)
+                hasPriceConflict ||
+                Boolean(isBalanceInsufficient) ||
+                !selectedWalletAddress
               }
-              className="w-full gap-2 py-6 font-extrabold text-sm shadow-xl shadow-purple-600/30 rounded-xl"
+              onClick={handleConfirmOrder}
+              className="w-full gap-2 py-6 text-sm font-bold bg-[#e07328] hover:bg-[#ea8238] text-white shadow-xl shadow-black/40"
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
+                  <Loader2 className="h-4 w-4 animate-spin text-white" />
                   <span>Processando Transação...</span>
                 </>
               ) : (
                 <>
-                  <CheckCircle2 className="h-4 w-4" />
+                  <ShieldCheck className="h-4 w-4" />
                   <span>Confirmar e Liquidar Pedido</span>
                 </>
               )}
             </Button>
-
-            <div className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-              <span>Assinatura protegida por smart contract auditado</span>
-            </div>
           </div>
         </div>
       </div>

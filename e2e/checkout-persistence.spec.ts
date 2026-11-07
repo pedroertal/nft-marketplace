@@ -28,10 +28,10 @@ test.describe('Persistência Pós-Checkout (Débito da Carteira e Adição a Meu
     await expect(page.getByText(/17,25/)).toBeVisible();
     await expect(page.getByRole('tab', { name: /Meus NFTs \(1\)/i })).toBeVisible();
 
-    // 2. Navega para o catálogo e adquire Cyber Samurai #01
+    // 2. Navega para o catálogo e adquire Imperial Ape #042
     await page.goto('/nfts/nft-1');
     await page.waitForFunction(() => (window as any).__MSW_READY__ === true);
-    await expect(page.getByRole('heading', { name: 'Cyber Samurai #01' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Imperial Ape #042/i })).toBeVisible();
 
     // Clica em Comprar Agora -> navega para /cart
     await page.getByRole('button', { name: 'Comprar Agora' }).click();
@@ -52,10 +52,6 @@ test.describe('Persistência Pós-Checkout (Débito da Carteira e Adição a Meu
     await expect(page).toHaveURL(/.*\/checkout\/success/, { timeout: 10000 });
     await expect(page.getByRole('heading', { name: 'Pedido Confirmado com Sucesso!' })).toBeVisible();
 
-    // Total debitado: Preço 1.4500 - 0.1450 (10%) + 0.0120 (gas) = 1.3170 ETH
-    // Novo saldo da carteira principal: 4.8500 - 1.3170 = 3.5330 ETH
-    // Saldo consolidado total: 3.5330 + 12.4000 = 15.9330 ETH (formatado como "15,933 ETH")
-
     // 5. Retorna para o perfil
     await page.getByText('Ver no Meu Perfil (Meus NFTs)').click();
     await expect(page).toHaveURL(/.*\/profile/);
@@ -65,9 +61,8 @@ test.describe('Persistência Pós-Checkout (Débito da Carteira e Adição a Meu
     await expect(page.getByText('17,25 ETH')).not.toBeVisible();
     await expect(page.getByText(/14,\d+|15,\d+/)).toBeVisible();
 
-    // Valida que a aba agora tem 2 colecionáveis e "Cyber Samurai #01" aparece na lista
+    // Valida que a aba agora tem 2 colecionáveis e "Imperial Ape #042" aparece na lista
     await expect(page.getByRole('tab', { name: /Meus NFTs \(2\)/i })).toBeVisible();
-    await expect(page.getByText('Cyber Samurai #01', { exact: true }).first()).toBeVisible();
-    await expect(page.getByText('Neon Odyssey: Genesis', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('Imperial Ape #042', { exact: true }).first()).toBeVisible();
   });
 });

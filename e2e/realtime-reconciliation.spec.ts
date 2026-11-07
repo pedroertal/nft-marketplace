@@ -19,7 +19,7 @@ test.describe('Reconciliação e Tempo Real via Socket.IO Mock', () => {
     await expect(page.getByRole('heading', { name: /Carrinho/i })).toBeVisible();
 
     // Verifica item no carrinho
-    await expect(page.getByText('Cyber Samurai #01')).toBeVisible();
+    await expect(page.getByText('Imperial Ape #042')).toBeVisible();
 
     // 2. Dispara evento de tempo real no contexto da janela do browser
     await page.evaluate(() => {

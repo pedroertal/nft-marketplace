@@ -15,7 +15,7 @@ test.describe('Catálogo: Filtros na URL, Busca e Paginação', () => {
   }) => {
     await page.goto('/');
     await page.waitForFunction(() => (window as any).__MSW_READY__ === true);
-    await expect(page.getByRole('heading', { name: /Colecione e negocie/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /SEJA DONO DO FUTURO/i })).toBeVisible();
 
     // 1. Busca por "Neon"
     const searchInput = page.getByLabel('Campo de busca de NFTs');
@@ -24,19 +24,25 @@ test.describe('Catálogo: Filtros na URL, Busca e Paginação', () => {
 
     // URL deve conter ?search=Neon
     await expect(page).toHaveURL(/.*search=Neon/);
-    await expect(page.getByText('Neon Odyssey: Genesis')).toBeVisible();
+    await expect(page.getByText('Neon Ape #001 (Genesis)').first()).toBeVisible();
 
     // 2. Recarrega a página (F5)
     await page.reload();
 
     // Estado e filtros na URL devem sobreviver ao reload
     await expect(page).toHaveURL(/.*search=Neon/);
-    await expect(page.getByText('Neon Odyssey: Genesis')).toBeVisible();
+    await expect(page.getByText('Neon Ape #001 (Genesis)').first()).toBeVisible();
   });
 
   test('deve filtrar por categoria e atualizar a URL', async ({ page }) => {
     await page.goto('/');
     await page.waitForFunction(() => (window as any).__MSW_READY__ === true);
+
+    // Se estiver em viewport mobile/tablet, abre a gaveta de filtros
+    const mobileFiltersBtn = page.getByRole('button', { name: 'Filtros' });
+    if (await mobileFiltersBtn.isVisible()) {
+      await mobileFiltersBtn.click();
+    }
 
     // Clica na categoria "Digital Art"
     const categoryButton = page.getByRole('button', { name: 'Digital Art' }).first();
@@ -44,6 +50,6 @@ test.describe('Catálogo: Filtros na URL, Busca e Paginação', () => {
 
     // URL deve conter ?category=Digital%20Art
     await expect(page).toHaveURL(/.*category=Digital/);
-    await expect(page.getByText('Neon Odyssey: Genesis')).toBeVisible();
+    await expect(page.getByText('Neon Ape #001 (Genesis)').first()).toBeVisible();
   });
 });

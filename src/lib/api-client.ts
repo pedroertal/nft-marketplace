@@ -95,7 +95,7 @@ apiClient.interceptors.response.use(
         const defaultNfts = [
           {
             id: "nft-1",
-            title: "Cyber Samurai #01",
+            title: "Imperial Ape #042",
             price: 2.5,
             image:
               "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { NftCategory } from '@/types/entities';
-import { RotateCcw, Filter, Sparkles } from 'lucide-react';
+import { RotateCcw, Filter, Sparkles, Tag } from 'lucide-react';
 
 const CATEGORIES: Array<{ label: string; value: NftCategory | 'All' }> = [
   { label: 'Todas as Categorias', value: 'All' },
@@ -58,14 +58,14 @@ export function FilterSidebar({
     <aside
       className={`space-y-6 ${
         !isMobileDrawer
-          ? 'w-64 shrink-0 rounded-2xl border border-white/10 bg-slate-900/60 p-5 backdrop-blur-xl h-fit'
+          ? 'w-64 shrink-0 rounded-2xl border border-[#36261b] bg-[#1d1510] p-5 h-fit shadow-lg shadow-black/40'
           : 'w-full'
       }`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-4">
-        <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-white">
-          <Filter className="h-4 w-4 text-purple-400" />
+      <div className="flex items-center justify-between border-b border-[#36261b] pb-4">
+        <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-[#f6eee7]">
+          <Filter className="h-4 w-4 text-[#e07328]" />
           Filtros
         </h3>
         {hasActiveFilters && (
@@ -73,7 +73,7 @@ export function FilterSidebar({
             variant="ghost"
             size="sm"
             onClick={onReset}
-            className="h-7 px-2 text-[11px] text-muted-foreground hover:text-white gap-1"
+            className="h-7 px-2 text-[11px] text-[#a49386] hover:text-[#f6eee7] gap-1"
           >
             <RotateCcw className="h-3 w-3" />
             Limpar
@@ -83,8 +83,8 @@ export function FilterSidebar({
 
       {/* Categories */}
       <div className="space-y-3">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
+        <span className="text-xs font-semibold uppercase tracking-wider text-[#a49386] flex items-center gap-1.5">
+          <Tag className="h-3.5 w-3.5 text-[#e07328]" />
           Categorias
         </span>
         <div className="flex flex-col gap-1">
@@ -100,13 +100,13 @@ export function FilterSidebar({
                 onClick={() => onCategoryChange(cat.value)}
                 className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-all text-left ${
                   isSelected
-                    ? 'bg-purple-600/30 text-white border border-purple-500/50 shadow-sm'
-                    : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    ? 'bg-[#e07328]/15 text-[#f5a267] border border-[#e07328]/30 font-semibold'
+                    : 'text-[#c4b5a8] hover:bg-[#281d16] hover:text-[#f6eee7]'
                 }`}
               >
                 <span>{cat.label}</span>
                 {isSelected && (
-                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-sm shadow-cyan-400" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#e07328]" />
                 )}
               </button>
             );
@@ -114,51 +114,63 @@ export function FilterSidebar({
         </div>
       </div>
 
-      {/* Price Range in ETH */}
-      <div className="space-y-3 border-t border-white/10 pt-5">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+      {/* Price Range Filter */}
+      <div className="space-y-3 border-t border-[#36261b] pt-4">
+        <span className="text-xs font-semibold uppercase tracking-wider text-[#a49386]">
           Faixa de Preço (ETH)
         </span>
         <form onSubmit={handleApplyPrice} className="space-y-3">
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="text-[10px] text-muted-foreground font-mono">
+              <label htmlFor="min-price" className="text-[10px] text-[#8a796e] block mb-1">
                 Mínimo
               </label>
               <Input
+                id="min-price"
                 type="number"
                 step="0.01"
                 min="0"
                 placeholder="0.0"
                 value={localMin}
                 onChange={(e) => setLocalMin(e.target.value)}
-                className="h-8 text-xs bg-slate-950/60 border-white/10"
+                className="h-8 text-xs bg-[#140e0b] border-[#36261b] text-[#f6eee7] placeholder:text-[#8a796e]"
               />
             </div>
             <div>
-              <label className="text-[10px] text-muted-foreground font-mono">
+              <label htmlFor="max-price" className="text-[10px] text-[#8a796e] block mb-1">
                 Máximo
               </label>
               <Input
+                id="max-price"
                 type="number"
                 step="0.01"
                 min="0"
                 placeholder="10.0"
                 value={localMax}
                 onChange={(e) => setLocalMax(e.target.value)}
-                className="h-8 text-xs bg-slate-950/60 border-white/10"
+                className="h-8 text-xs bg-[#140e0b] border-[#36261b] text-[#f6eee7] placeholder:text-[#8a796e]"
               />
             </div>
           </div>
           <Button
             type="submit"
-            variant="outline"
             size="sm"
-            className="w-full text-xs border-white/10 hover:border-purple-500/50 bg-slate-800/60"
+            className="w-full text-xs font-semibold bg-[#281d16] hover:bg-[#35251c] border border-[#3e2c20] text-[#f6eee7]"
           >
             Aplicar Preço
           </Button>
         </form>
+      </div>
+
+      {/* Curated Collection Note */}
+      <div className="rounded-xl bg-[#140e0b]/80 border border-[#36261b] p-3 text-[11px] text-[#a49386] space-y-1">
+        <div className="flex items-center gap-1 font-semibold text-[#f6eee7]">
+          <Sparkles className="h-3 w-3 text-[#e07328]" />
+          <span>Coleção Kurio</span>
+        </div>
+        <p className="leading-snug">
+          Obras selecionadas por curadores da comunidade Web3 com royalties imutáveis.
+        </p>
       </div>
     </aside>
   );

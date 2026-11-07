@@ -4,7 +4,7 @@ import { registerSchema, RegisterFormValues } from '../schemas/auth.schemas';
 import { useRegister } from '../api/useRegister';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { User, Mail, Lock, Hexagon, ArrowRight, Loader2, Palette, Shield } from 'lucide-react';
+import { User, Mail, Lock, Box, ArrowRight, Loader2, Palette, Shield } from 'lucide-react';
 
 interface RegisterFormProps {
   redirectTo?: string;
@@ -52,46 +52,46 @@ export function RegisterForm({ redirectTo }: RegisterFormProps) {
   };
 
   return (
-    <div className="w-full max-w-md space-y-8 rounded-3xl border border-white/10 bg-slate-900/80 p-8 shadow-2xl backdrop-blur-xl">
+    <div className="w-full max-w-md space-y-8 rounded-3xl border border-[#3e2c20] bg-[#1d1510] p-8 shadow-2xl">
       {/* Header */}
       <div className="text-center space-y-2">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-cyan-400 to-purple-600 p-0.5 shadow-lg shadow-cyan-500/25">
-          <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-slate-950/70">
-            <Hexagon className="h-6 w-6 text-cyan-300 stroke-[2.2] fill-cyan-400/10" />
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#e07328] to-[#f59e0b] p-0.5 shadow-lg shadow-black/50">
+          <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-[#140e0b]">
+            <Box className="h-6 w-6 text-[#f5a267] stroke-[2.2]" />
           </div>
         </div>
-        <h2 className="text-2xl font-extrabold tracking-tight text-white">
+        <h2 className="text-2xl font-black tracking-tight text-[#f6eee7]">
           Criar Nova Conta
         </h2>
-        <p className="text-xs text-muted-foreground">
-          Junte-se ao marketplace Web3 descentralizado
+        <p className="text-xs text-[#a49386]">
+          Junte-se à Kurio como colecionador soberano ou criador verificado
         </p>
       </div>
 
-      {/* Formulário com validação Zod */}
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Nome */}
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-            <User className="h-3.5 w-3.5 text-purple-400" />
+          <label className="text-xs font-semibold text-[#f6eee7] flex items-center gap-1.5">
+            <User className="h-3.5 w-3.5 text-[#e07328]" />
             Nome Completo
           </label>
           <Input
-            type="text"
             value={formData.name}
             onChange={(e) =>
               setFormData((prev) => ({ ...prev, name: e.target.value }))
             }
-            placeholder="Seu nome ou pseudônimo"
-            className={errors.name ? 'border-destructive focus-visible:ring-destructive' : ''}
+            placeholder="Ex: Beatriz Lima"
+            className="h-11 rounded-xl bg-[#140e0b] border-[#36261b] text-sm text-[#f6eee7] placeholder:text-[#8a796e] focus:border-[#e07328]"
           />
           {errors.name && (
-            <p className="text-[11px] font-medium text-destructive">{errors.name}</p>
+            <p className="text-[11px] text-red-400 font-medium">{errors.name}</p>
           )}
         </div>
 
+        {/* E-mail */}
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-            <Mail className="h-3.5 w-3.5 text-purple-400" />
+          <label className="text-xs font-semibold text-[#f6eee7] flex items-center gap-1.5">
+            <Mail className="h-3.5 w-3.5 text-[#e07328]" />
             E-mail
           </label>
           <Input
@@ -100,18 +100,18 @@ export function RegisterForm({ redirectTo }: RegisterFormProps) {
             onChange={(e) =>
               setFormData((prev) => ({ ...prev, email: e.target.value }))
             }
-            placeholder="voce@exemplo.com"
-            autoComplete="email"
-            className={errors.email ? 'border-destructive focus-visible:ring-destructive' : ''}
+            placeholder="beatriz@exemplo.com"
+            className="h-11 rounded-xl bg-[#140e0b] border-[#36261b] text-sm text-[#f6eee7] placeholder:text-[#8a796e] focus:border-[#e07328]"
           />
           {errors.email && (
-            <p className="text-[11px] font-medium text-destructive">{errors.email}</p>
+            <p className="text-[11px] text-red-400 font-medium">{errors.email}</p>
           )}
         </div>
 
+        {/* Senha */}
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-            <Lock className="h-3.5 w-3.5 text-purple-400" />
+          <label className="text-xs font-semibold text-[#f6eee7] flex items-center gap-1.5">
+            <Lock className="h-3.5 w-3.5 text-[#e07328]" />
             Senha
           </label>
           <Input
@@ -121,78 +121,74 @@ export function RegisterForm({ redirectTo }: RegisterFormProps) {
               setFormData((prev) => ({ ...prev, password: e.target.value }))
             }
             placeholder="Mínimo 6 caracteres"
-            autoComplete="new-password"
-            className={errors.password ? 'border-destructive focus-visible:ring-destructive' : ''}
+            className="h-11 rounded-xl bg-[#140e0b] border-[#36261b] text-sm text-[#f6eee7] placeholder:text-[#8a796e] focus:border-[#e07328]"
           />
           {errors.password && (
-            <p className="text-[11px] font-medium text-destructive">{errors.password}</p>
+            <p className="text-[11px] text-red-400 font-medium">{errors.password}</p>
           )}
         </div>
 
-        {/* Escolha de Papel: Colecionador ou Criador */}
-        <div className="space-y-1.5 pt-1">
-          <label className="text-xs font-semibold uppercase tracking-wider text-slate-300">
-            Perfil na Plataforma
+        {/* Perfil: Colecionador vs Criador */}
+        <div className="space-y-2 pt-1">
+          <label className="text-xs font-semibold text-[#f6eee7]">
+            Tipo de Perfil
           </label>
           <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
+            <div
               onClick={() => setFormData((prev) => ({ ...prev, role: 'collector' }))}
-              className={`flex flex-col items-center justify-center rounded-xl border p-3 text-center transition-all ${
+              className={`flex flex-col items-center justify-center rounded-2xl border p-3.5 cursor-pointer text-center transition-all ${
                 formData.role === 'collector'
-                  ? 'border-purple-500 bg-purple-950/40 text-white shadow-md'
-                  : 'border-white/10 bg-slate-900/60 text-muted-foreground hover:bg-slate-800'
+                  ? 'border-[#e07328] bg-[#e07328]/15 text-[#f5a267]'
+                  : 'border-[#36261b] bg-[#140e0b] text-[#a49386] hover:bg-[#261c15]'
               }`}
             >
-              <Shield className="h-5 w-5 mb-1 text-purple-400" />
-              <span className="text-xs font-bold">Colecionador</span>
-              <span className="text-[10px] text-muted-foreground">Comprar e guardar</span>
-            </button>
+              <Shield className="h-5 w-5 mb-1 text-[#e07328]" />
+              <span className="text-xs font-bold text-[#f6eee7]">Colecionador</span>
+              <span className="text-[10px] text-[#8a796e] mt-0.5">Comprar e colecionar</span>
+            </div>
 
-            <button
-              type="button"
+            <div
               onClick={() => setFormData((prev) => ({ ...prev, role: 'creator' }))}
-              className={`flex flex-col items-center justify-center rounded-xl border p-3 text-center transition-all ${
+              className={`flex flex-col items-center justify-center rounded-2xl border p-3.5 cursor-pointer text-center transition-all ${
                 formData.role === 'creator'
-                  ? 'border-cyan-400 bg-cyan-950/40 text-white shadow-md'
-                  : 'border-white/10 bg-slate-900/60 text-muted-foreground hover:bg-slate-800'
+                  ? 'border-[#e07328] bg-[#e07328]/15 text-[#f5a267]'
+                  : 'border-[#36261b] bg-[#140e0b] text-[#a49386] hover:bg-[#261c15]'
               }`}
             >
-              <Palette className="h-5 w-5 mb-1 text-cyan-400" />
-              <span className="text-xs font-bold">Criador</span>
-              <span className="text-[10px] text-muted-foreground">Criar e vender</span>
-            </button>
+              <Palette className="h-5 w-5 mb-1 text-[#e07328]" />
+              <span className="text-xs font-bold text-[#f6eee7]">Criador / Artista</span>
+              <span className="text-[10px] text-[#8a796e] mt-0.5">Listar e monetizar</span>
+            </div>
           </div>
         </div>
 
         <Button
           type="submit"
           disabled={registerMutation.isPending}
-          className="w-full gap-2 py-6 font-semibold rounded-xl shadow-xl shadow-cyan-500/20 mt-2"
+          className="w-full gap-2 py-6 text-sm font-bold bg-[#e07328] hover:bg-[#ea8238] text-white shadow-xl shadow-black/40 rounded-xl mt-4"
         >
           {registerMutation.isPending ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              <span>Criando sua conta...</span>
+              <Loader2 className="h-4 w-4 animate-spin text-white" />
+              <span>Criando sua Conta...</span>
             </>
           ) : (
             <>
-              <span>Cadastrar e Conectar</span>
+              <span>Cadastrar na Kurio</span>
               <ArrowRight className="h-4 w-4" />
             </>
           )}
         </Button>
       </form>
 
-      {/* Link para Login */}
-      <div className="text-center text-xs text-muted-foreground border-t border-white/5 pt-4">
-        Já possui uma conta cadastrada?{' '}
+      {/* Footer */}
+      <div className="text-center text-xs text-[#a49386]">
+        <span>Já tem uma conta cadastrada? </span>
         <Link
           to="/auth/login"
-          search={{ redirect: redirectTo }}
-          className="font-semibold text-purple-400 hover:text-purple-300"
+          className="font-bold text-[#e07328] hover:underline hover:text-[#ea8238]"
         >
-          Acessar minha conta
+          Fazer Login
         </Link>
       </div>
     </div>

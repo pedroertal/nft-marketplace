@@ -34,13 +34,13 @@ export function CouponInput({
   };
 
   return (
-    <div className="space-y-3 rounded-2xl border border-white/10 bg-slate-900/60 p-4 backdrop-blur-xl">
-      <div className="flex items-center justify-between text-xs font-semibold text-slate-300">
+    <div className="space-y-3 rounded-2xl border border-[#36261b] bg-[#1d1510] p-4">
+      <div className="flex items-center justify-between text-xs font-semibold text-[#f6eee7]">
         <span className="flex items-center gap-1.5 uppercase tracking-wider">
-          <Tag className="h-3.5 w-3.5 text-cyan-400" />
+          <Tag className="h-3.5 w-3.5 text-[#e07328]" />
           Cupom Promocional
         </span>
-        <span className="text-[10px] text-muted-foreground font-mono">Dica: NEXUS10 ou CRYPTO20</span>
+        <span className="text-[10px] text-[#8a796e] font-mono">Dica: NEXUS10 ou CRYPTO20</span>
       </div>
 
       {appliedCoupon ? (
@@ -57,7 +57,7 @@ export function CouponInput({
           <button
             type="button"
             onClick={onRemoveCoupon}
-            className="text-muted-foreground hover:text-white p-1"
+            className="text-[#a49386] hover:text-[#f6eee7] p-1"
             aria-label="Remover cupom"
           >
             <X className="h-4 w-4" />
@@ -69,9 +69,14 @@ export function CouponInput({
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value.toUpperCase())}
             placeholder="Ex: NEXUS10"
-            className="h-9 uppercase font-mono text-xs bg-slate-950/70"
+            className="h-9 uppercase font-mono text-xs bg-[#140e0b] border-[#36261b] text-[#f6eee7] placeholder:text-[#8a796e] focus:border-[#e07328]"
           />
-          <Button type="submit" variant="outline" size="sm" className="h-9 px-4 text-xs font-bold border-white/10">
+          <Button
+            type="submit"
+            variant="outline"
+            size="sm"
+            className="h-9 px-4 text-xs font-bold border-[#3d2c20] bg-[#241a13] hover:bg-[#322319] text-[#f6eee7]"
+          >
             Aplicar
           </Button>
         </form>
