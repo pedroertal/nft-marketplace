@@ -1,4 +1,4 @@
-# NFT Nexus — Marketplace de NFTs
+# NFT Kurio — Marketplace de NFTs
 
 Aplicação web desenvolvida em React e TypeScript para catálogo, negociação e liquidação simulada de NFTs (tokens não-fungíveis). O projeto simula a experiência completa de um marketplace descentralizado (Web3), com foco em precisão matemática para valores em criptoativos, sincronização de filtros na URL, persistência de dados no navegador e testes ponta a ponta automatizados.
 
